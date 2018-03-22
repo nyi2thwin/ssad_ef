@@ -6,6 +6,26 @@ var assert = require('assert');
 // 3rd party
 var express = require('express');
 var request = require('request');
+var mongoose = require('mongoose');
+
+
+
+
+//mongoose instance connection url connection
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost:27017/EFDatabase');
+
+require('./models/User');
+
+var User = mongoose.model('User');
+
+//wipe all user
+User.remove({}, function(err,removed) {
+	//create 2 user
+	(new User({userId:1,type:"AssetsOfficer",password:"EF123!"})).save();
+	(new User({userId:2,type:"AssetsCommander",password:"EF123!"})).save();
+});
+
 
 // local
 var hbs = require('hbs').create();
@@ -51,8 +71,12 @@ app.use('/', my_view);
 
 
 app.get('/', function(req, res){
-  var template_data = {title : 'EF | Home'}
-  res.render('index', template_data);
+	 User.find({}, function(err, users) {
+	    if (err)
+	      res.send(err);
+	    res.send(users);
+	});
+ 	
 });
 
 
