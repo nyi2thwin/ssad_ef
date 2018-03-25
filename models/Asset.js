@@ -8,11 +8,11 @@ var AssetScheme = new Schema({
 		required: 'Kindly enter asset type'
 	},
 	availableUnit: {
-		type:int, //Officer? commander etc
+		type:Number, //Officer? commander etc
 		required: 'Kindly enter available number'
 	},
 	totalUnit: {
-		type:int,
+		type:Number,
 		required: 'Kindly enter total number'
 	}
 });

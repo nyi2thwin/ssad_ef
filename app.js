@@ -16,15 +16,26 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/EFDatabase');
 
 require('./models/User');
+require('./models/Asset');
 
 var User = mongoose.model('User');
+var Asset = mongoose.model('Asset');
 
 //wipe all user
 User.remove({}, function(err,removed) {
 	//create 2 user
-	(new User({userId:1,type:"AssetsOfficer",password:"EF123!"})).save();
-	(new User({userId:2,type:"AssetsCommander",password:"EF123!"})).save();
+	(new User({userName:"user1",role:"AssetsOfficer",password:"EF123!"})).save();
+	(new User({userName:"user2",role:"Commander",password:"EF123!"})).save();
 });
+
+//wipe all assets
+Asset.remove({}, function(err,removed) {
+	//create sample assets
+	(new Asset({type:"fireman",availableUnit:200,totalUnit:200})).save();
+	(new Asset({type:"soldier",availableUnit:200,totalUnit:200})).save();
+	(new Asset({type:"police",availableUnit:200,totalUnit:200})).save();
+});
+
 
 
 // local

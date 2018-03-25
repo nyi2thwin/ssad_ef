@@ -1,10 +1,22 @@
-var express = require('express');
-var router = express.Router();
+'use strict';
+var mongoose = require('mongoose'),
+	User = mongoose.model('User');
 
-/* GET users listing. */
-router.get('/case/', function(req, res){
-  var template_data = {title : 'EF | Home'}
-  res.render('case', template_data);
-});
 
-module.exports = router;
+exports.list_all_users = function(req, res) {
+  User.find({}, function(err, user) {
+    if (err)
+      res.send(err);
+    res.json(user);
+  });
+};
+
+exports.check_login = function(req, res) {
+  User.findOneAndUpdate({_id: req.params.userId,}, req.body, {new: true}, function(err, user) {
+    if (err)
+      res.send(err);
+    res.json(user);
+  });
+};
+
+

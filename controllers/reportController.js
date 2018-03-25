@@ -1,10 +1,15 @@
-var express = require('express');
-var router = express.Router();
+'use strict';
+var mongoose = require('mongoose'),
+	IncidentReport = mongoose.model('IncidentReport'),
+	LiveReport = mongoose.model('LiveReport');
 
-/* GET users listing. */
-router.get('/case/', function(req, res){
-  var template_data = {title : 'EF | Home'}
-  res.render('case', template_data);
-});
 
-module.exports = router;
+exports.list_all_LiveReport = function(req, res) {
+  LiveReport.find({}, function(err, LiveReport) {
+    if (err)
+      res.send(err);
+    res.json(LiveReport);
+  });
+};
+
+

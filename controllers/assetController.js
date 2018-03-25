@@ -1,10 +1,16 @@
-var express = require('express');
-var router = express.Router();
+'use strict';
+var mongoose = require('mongoose'),
+	Asset = mongoose.model('Asset');
 
-/* GET users listing. */
-router.get('/case/', function(req, res){
-  var template_data = {title : 'EF | Home'}
-  res.render('case', template_data);
-});
 
-module.exports = router;
+exports.list_all_asset = function(req, res) {
+  Asset.find({}, function(err, asset) {
+    if (err)
+      res.send(err);
+    res.json(asset);
+  });
+};
+
+
+
+
