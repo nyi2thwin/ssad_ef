@@ -1,11 +1,24 @@
 {{> header }}
-<div class="wrapper">
-    <!-- Sidebar Holder -->
-    EF HOME PAGE
+<div class="container">
+	<div class="col-md-4">
+	</div>
 
-    Login form
-    
-    
+	<div class="col-md-4">
+		<h2>EF Login</h2>
+		<p>{{error_message}}</p>
+		<form action="/" method="post">
+			<div class="form-group">
+			  	<label for="username">Username:</label>
+			  	<input type="username" class="form-control" id="username" placeholder="Enter username" name="username">
+			</div>
+			<div class="form-group">
+			  	<label for="password">Password:</label>
+			  	<input type="password" class="form-control" id="password" placeholder="Enter password" name="password">
+			</div>
+			<button type="submit" class="btn btn-default">Submit</button>
+		</form>
+	</div>
+	<div class="col-md-4">
+	</div>
 </div>
-
 {{> footer }}

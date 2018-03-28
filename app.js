@@ -7,9 +7,9 @@ var assert = require('assert');
 var express = require('express');
 var request = require('request');
 var mongoose = require('mongoose');
-
-
-
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var bodyParser = require('body-parser')
 
 //mongoose instance connection url connection
 mongoose.Promise = global.Promise;
@@ -21,11 +21,14 @@ require('./models/Asset');
 var User = mongoose.model('User');
 var Asset = mongoose.model('Asset');
 
+//controller
+var LoginController = require('./controllers/loginController')
+
 //wipe all user
 User.remove({}, function(err,removed) {
 	//create 2 user
-	(new User({userName:"user1",role:"AssetsOfficer",password:"EF123!"})).save();
-	(new User({userName:"user2",role:"Commander",password:"EF123!"})).save();
+	(new User({username:"user1",role:"AssetsOfficer",password:"123123123"})).save();
+	(new User({username:"user2",role:"Commander",password:"123123123"})).save();
 });
 
 //wipe all assets
@@ -54,6 +57,34 @@ app.set('views', __dirname + '/templates');
 
 app.use(express.static(__dirname + '/public'));
 
+//app.use(cookieParser);
+app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+  secret: 'EF Secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: !true }
+}));
+
+app.use(function (req, res, next) {
+    var err = req.session.error,
+        msg = req.session.success;
+    delete req.session.error;
+    delete req.session.success;
+    res.locals.message = '';
+    res.locals.user = req.session.user;
+    if (err) res.locals.message = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong>'+err+'</div>';
+    if (msg) res.locals.message = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> login successful.</div>'
+    next();
+});
+
+
+// support parsing of application/json type post data
+app.use(bodyParser.json());
+
+//support parsing of application/x-www-form-urlencoded post data
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 hbs.registerHelper('link_to', function(context) {
   return "<a href='" + context.url + "'>" + context.body + "</a>";
@@ -71,26 +102,39 @@ hbs.localsAsTemplateData(app);
 app.locals.father = 'Alan';
 
 
+
 var ef_api = require('./controllers/myApi');
 app.use('/ef_api', ef_api);
 
 var my_cmo_api = require('./controllers/myCMOApi');
 app.use('/cmo_api', my_cmo_api);
 
-var my_view = require('./views/view');
-app.use('/', my_view);
+
+app.get('/userList', requiredAuthentication, LoginController.list_all_users);
 
 
 app.get('/', function(req, res){
-	 User.find({}, function(err, users) {
-	    if (err)
-	      res.send(err);
-	    res.send(users);
-	});
- 	
+	if(req.session.user){
+		var user = req.session.user;
+		if (user.role == 'Commander')
+            res.redirect('/commander');
+        else
+            res.redirect('/assetOfficer');
+	}
+	res.render('index');
+});
+//login post form
+app.post('/',LoginController.check_login);
+
+//logout
+app.get('/logout', function (req, res) {
+    req.session.destroy(function () {
+        res.redirect('/');
+    });
 });
 
-
+var my_view = require('./views/view');
+app.use('/',requiredAuthentication, my_view);
 
 
 app.use(function(err, req, res, next) {
@@ -98,3 +142,13 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
+
+//all functions here
+function requiredAuthentication(req, res, next) {
+    if (req.session.user) {
+        next();
+    } else {
+        req.session.error = 'Access denied!';
+        res.redirect('/');
+    }
+}
