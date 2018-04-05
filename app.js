@@ -17,9 +17,11 @@ mongoose.connect('mongodb://localhost:27017/EFDatabase');
 
 require('./models/User');
 require('./models/Asset');
+require('./models/IncidentReport');
 
 var User = mongoose.model('User');
 var Asset = mongoose.model('Asset');
+var IncidentReport = mongoose.model('IncidentReport');
 
 //controller
 var LoginController = require('./controllers/loginController')
@@ -32,14 +34,24 @@ User.remove({}, function(err,removed) {
 });
 
 //wipe all assets
-Asset.remove({}, function(err,removed) {
+//Asset.remove({}, function(err,removed) {
 	//create sample assets
-	(new Asset({type:"fireman",availableUnit:200,totalUnit:200})).save();
-	(new Asset({type:"soldier",availableUnit:200,totalUnit:200})).save();
-	(new Asset({type:"police",availableUnit:200,totalUnit:200})).save();
+	//(new Asset({type:"military",availableUnit:100,totalUnit:100})).save();
+	//(new Asset({type:"bomb disposal",availableUnit:100,totalUnit:100})).save();
+	//(new Asset({type:"coast guard",availableUnit:100,totalUnit:100})).save();
+	//(new Asset({type:"coast guard",availableUnit:100,totalUnit:100})).save();
+//	(new Asset({type:"hazmat",availableUnit:100,totalUnit:100})).save();
+	//(new Asset({type:"search and rescue",availableUnit:100,totalUnit:100})).save();
+//	(new Asset({type:"civilian evacuation",availableUnit:100,totalUnit:100})).save();
+//	(new Asset({type:"ambulance",availableUnit:50,totalUnit:50})).save();
+//	(new Asset({type:"emergency traffic control",availableUnit:100,totalUnit:100})).save();
+//});
+
+//wipe incident Report
+IncidentReport.remove({}, function(err,removed) {
+	//create sample incident report
+	(new IncidentReport({caseId:"case0001",location:["NTU",1.3483099,103.680946],affectedArea:1,noOfInjury:10,noOfCasualty:15,typeOfIncident:"earthquake",description:"This is a fake data"})).save();
 });
-
-
 
 // local
 var hbs = require('hbs').create();
