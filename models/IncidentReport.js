@@ -7,7 +7,10 @@ var IncidentReportScheme = new Schema({
 		type:String,  //firefighter , police , FBI whatever etc
 		required: 'Kindly enter caseId'
 	},
-	location: [],
+	location: {
+		type:Array,
+		required: 'Kindly enter the location'
+	},
 	affectedArea: {
 		type:Number,
 		required: 'Kindly enter total affectedArea'
@@ -20,15 +23,15 @@ var IncidentReportScheme = new Schema({
 		type:Number,
 		required: 'Kindly enter total noOfCasualty'
 	},
-	incidentDateTime:{ 
-		type: Date, 
-		default: Date.now 
+	incidentDateTime:{
+		type: Date,
+		default: Date.now
 	},
-	typeOfIncident{
+	typeOfIncident:{
 		type: String,
 		required: 'Kindly enter typeOfIncident'
 	},
-	description{
+	description:{
 		type: String,
 		required: 'Kindly enter description'
 	}
