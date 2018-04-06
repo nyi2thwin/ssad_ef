@@ -3,35 +3,28 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var IncidentReportScheme = new Schema({
-	caseId: {
-		type:String,  //firefighter , police , FBI whatever etc
-		required: 'Kindly enter caseId'
+	caseId: Number,
+	location:  {
+	    name: String,
+	    latitude:  Number,
+	    longitude: Number
 	},
-	location: [],
-	affectedArea: {
-		type:Number,
-		required: 'Kindly enter total affectedArea'
-	},
-	noOfInjury:{
-		type:Number,
-		required: 'Kindly enter total noOfInjury'
-	},
-	noOfCasualty:{
-		type:Number,
-		required: 'Kindly enter total noOfCasualty'
-	},
-	incidentDateTime:{ 
-		type: Date, 
-		default: Date.now 
-	},
-	typeOfIncident{
+	incidentType:[String],
+	affectedArea:Number,
+	injuryCount:Number,
+	casualtyCount:Number,
+	incidentDateTime:Date,
+	description:String,
+	status:String,
+	updateLog: [{
+		description:String,
+		updatedTime: Date
+	}],
+	assigned_assets:[{
+		_assetId: Schema.Types.ObjectId,
 		type: String,
-		required: 'Kindly enter typeOfIncident'
-	},
-	description{
-		type: String,
-		required: 'Kindly enter description'
-	}
+		assigned_count: Number ,
+	}]
 });
 
 module.exports = mongoose.model('IncidentReport', IncidentReportScheme);
