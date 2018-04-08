@@ -5,26 +5,39 @@
 
 	<div class="col-md-4">
 		<h2>Submit Live Report</h2>
-		<p>{{error_message}}</p>
-		<form action="/" method="post">
+		{{#if success_message}}
+			<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong>{{{success_message}}}</div>
+		{{else if error_message}}
+			<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong>{{{error_message}}}</div>
+		
+		{{/if}}
+		
+
+		
+
+		<form action="/assetOfficer/" method="post">
 			<div class="form-group">
-			  	<label for="caseId">Select Case ID :</label>
-			  	<input type="caseId" class="form-control" id="caseId" placeholder="select Case ID" name="caseId">
+			  	<label for="caseId">Select Incident Case :</label>
+					<select class="form-control" placeholder="select Case ID" name="caseId">
+						{{#each IncidentReports}}
+						<option value="{{this.caseId}}">{{this.caseId}}.) {{this.description}}</option>
+						{{/each}}
+					</select>
 			</div>
 			<div class="form-group">
-			  	<label for="description">Description :</label>
-			  	<input type="description" class="form-control" id="description" placeholder="Enter description" name="description">
+			  	<label for="affectedArea">Affected Area :</label>
+			  	<input type="text" class="form-control" id="affectedArea" placeholder="Enter affectedArea" name="affectedArea">
 			</div>
 			<div class="form-group">
-			  	<label for="description">Description :</label>
-			  	<input type="description" class="form-control" id="description" placeholder="Enter description" name="description">
+			  	<label for="injuryCount">Injury Count :</label>
+			  	<input type="text" class="form-control" id="injuryCount" placeholder="Enter injuryCount" name="injuryCount">
 			</div>
 			<div class="form-group">
-			  	<label for="description">Description :</label>
-			  	<input type="description" class="form-control" id="description" placeholder="Enter description" name="description">
+			  	<label for="casualtyCount">Casualty Count :</label>
+			  	<input type="text" class="form-control" id="casualtyCount" placeholder="Enter casualtyCount" name="casualtyCount">
 			</div>
 			<div class="form-group">
-			  	<label for="description">Description :</label>
+			  	<label for="description">Live Report Description :</label>
 			  	<input type="description" class="form-control" id="description" placeholder="Enter description" name="description">
 			</div>
 			<button type="submit" class="btn btn-default">Submit</button>

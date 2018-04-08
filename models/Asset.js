@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var AssetScheme = new Schema({
-	type: {
+	assetType: {
 		type:String,  //firefighter , police , FBI whatever etc
 		required: 'Kindly enter asset type'
 	},

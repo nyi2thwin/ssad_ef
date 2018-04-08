@@ -17,12 +17,18 @@ mongoose.connect('mongodb://localhost:27017/EFDatabase');
 
 require('./models/User');
 require('./models/Asset');
+require('./models/IncidentReport');
+require('./models/LiveReport');
 
 var User = mongoose.model('User');
 var Asset = mongoose.model('Asset');
+var IncidentReport = mongoose.model('IncidentReport');
+var LiveReport = mongoose.model('LiveReport');
+
 
 //controller
 var LoginController = require('./controllers/loginController')
+var reportController = require('./controllers/reportController')
 
 //wipe all user
 User.remove({}, function(err,removed) {
@@ -133,8 +139,13 @@ app.get('/logout', function (req, res) {
     });
 });
 
+
+
+app.post('/insert_incident_report/', reportController.insert_incident_report);
+
 var my_view = require('./views/view');
 app.use('/',requiredAuthentication, my_view);
+
 
 
 app.use(function(err, req, res, next) {
