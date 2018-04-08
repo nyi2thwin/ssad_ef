@@ -17,9 +17,11 @@ mongoose.connect('mongodb://localhost:27017/EFDatabase');
 
 require('./models/User');
 require('./models/Asset');
+require('./models/IncidentReport');
 
 var User = mongoose.model('User');
 var Asset = mongoose.model('Asset');
+var IncidentReport = mongoose.model('IncidentReport');
 
 //controller
 var LoginController = require('./controllers/loginController')
@@ -39,6 +41,64 @@ Asset.remove({}, function(err,removed) {
 	(new Asset({type:"police",availableUnit:200,totalUnit:200})).save();
 });
 
+//Add test sample data
+IncidentReport.remove({}, function(err,removed) {
+	//create sample assets
+    (new IncidentReport(
+        {
+caseId: '1',
+location:  {
+    name: 'ab',
+    latitude:  1,
+    longitude: 2
+},
+incidentType:'[String]',
+affectedArea:2,
+injuryCount:2,
+casualtyCount:2,
+incidentDateTime:new Date("2014/11/20 04:11"),
+description:'123',
+status:'String',
+updateLog: [{
+    description:'String',
+    updatedTime: new Date("2014/11/20 04:11")
+}],
+assigned_assets:[{
+    //_assetId: Schema.Types.ObjectId,
+    assetType: 'String',
+    assigned_count: 2 ,
+}]
+}
+)).save();
+(new IncidentReport(
+    {
+caseId: '2',
+location:  {
+name: 'ab',
+latitude:  1,
+longitude: 2
+},
+incidentType:'[String]',
+affectedArea:2,
+injuryCount:2,
+casualtyCount:2,
+incidentDateTime:new Date("2014/11/20 04:11"),
+description:'123',
+status:'String',
+updateLog: [{
+description:'String',
+updatedTime: new Date("2014/11/20 04:11")
+}],
+assigned_assets:[{
+//_assetId: Schema.Types.ObjectId,
+assetType: 'String',
+assigned_count: 2 ,
+}]
+}
+)).save();
+    //(new IncidentReport({caseId:"2",affectedArea:"2",noOfInjury:"2",noOfCasualty:"2",
+//typeOfIncident:"asdf22222",description:"asfasdfsd2222"})).save();
+});
 
 
 // local
@@ -123,6 +183,7 @@ app.get('/', function(req, res){
 	}
 	res.render('index');
 });
+
 //login post form
 app.post('/',LoginController.check_login);
 
@@ -135,7 +196,6 @@ app.get('/logout', function (req, res) {
 
 var my_view = require('./views/view');
 app.use('/',requiredAuthentication, my_view);
-
 
 app.use(function(err, req, res, next) {
   res.status(500).send(err.stack.toString());
