@@ -1,0 +1,56 @@
+{{> header }}
+<div class="container">
+		<div class="col-md-4">
+			<h2>Commander Home Page</h2>
+			<br>
+
+			<table class='table'>
+				<tr>
+					<td>
+						<p>Create New Incident Manually</p>
+					</td>
+					<td>
+						<button onclick="window.location.href='/create_new_incident'">Create New Incident</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>Get New Case from CMO By ID</p>
+					</td>
+					<td>
+						<form action="/assign_assets" method="post">
+							<input name='caseid' value='123'></input>
+							<button type="submit" class="btn btn-default">Get New Case from CMO</button>
+						</form>
+					</td>
+				</tr>
+			</table>
+			<h3>Case Review</h3>
+			<form action="/commander" method="get">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Case Id</th>
+							<th>location long</th>
+							<th>location long</th>
+							<th>status</th>
+						</tr>
+					</thead>
+					<tbody>
+					{{#each result}}
+					<tr>
+							<td>{{this.caseId}}</td>
+							<td>{{this.location.name}}</td> 
+							<td>{{this.location.longitude}}</td>
+							<td>{{this.location.longitude}}</td>
+							<td>{{this.status}}</td>
+							<td><button formaction="/close_case/{{this.caseId}}" type="submit" class="btn btn-danger">Close case</button></td>
+							<td><button formaction="/assign_assets/{{this.caseId}}" type="submit" class="btn btn-success">Assign assets</button></td>
+					</tr>
+					{{/each}}
+					</tbody>
+				</table>
+			</form>
+	</div>
+</div>
+{{> footer }}
