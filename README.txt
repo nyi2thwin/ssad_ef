@@ -13,4 +13,6 @@ npm install body-parser
 
 npm install express-session
 
+Nom install fetch
+
 npm start

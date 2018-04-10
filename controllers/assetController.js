@@ -11,6 +11,31 @@ exports.list_all_asset = function(req, res) {
   });
 };
 
+exports.get_all_asset = function() {
+  //console.log('here');
+  return Asset.find({}) // Notice the return here
+  .exec()
+  .then((Assets) => {
+    return Assets;
+  })
+  .catch((err) => {
+    console.log(err);
+    return [];
+  });
+};
+
+exports.deduct_asset = function(type,number) {
+  var minus_number = parseInt(number)*(-1);
+  Asset.findOneAndUpdate({assetType:type},{$inc:{'availableUnit':minus_number}}).exec()
+  .then((Asset) => {
+    return Asset;
+  })
+  .catch((err) => {
+    console.log(err);
+    return {};
+  });
+};
+
 
 
 

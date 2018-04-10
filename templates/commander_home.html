@@ -1,0 +1,83 @@
+{{> header }}
+<div class="container">
+		<div class="col-md-12">
+			<h2>Commander Home Page</h2>
+			<br>
+			<div class="row">
+				<div class="col-md-3">
+					<a class="btn btn-primary" href="/create_new_incident">Create New Incident</a>
+				</div>
+				<div class="col-md-3">
+				</div>
+				<div class="col-md-1">
+				</div>
+				<div class="col-md-4">
+					<form action="/getData/" id="getCaseForm" method="post">
+						<div class="col-md-6">
+							<div class="form-group">
+								<input name='caseid' id="caseid" class="form-control" placeholder="#caseId"></input>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<button type="submit" class="btn btn-primary">Get New Case from CMO</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			
+			<h3>Case List</h3>
+			<form action="/commander" method="get">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Case Id</th>
+							<th>Location</th>
+							<th>Descrption</th>
+							<th>Assets</th>
+							<th>status</th>
+						</tr>
+					</thead>
+					<tbody>
+					{{#each IncidentReports}}
+					<tr>
+							<td>{{this.caseId}}</td>
+							<td>{{this.location.name}}</td>
+							<td>{{this.description}}</td> 
+							<td>
+								{{#each this.assignedAssets}}
+								Type : {{this.assetType}}<br>
+								Number : {{this.assignedCount}}<br>
+								Assigned DateTime : {{this.dateTime}}
+								<hr>
+								{{else}}
+								NA
+								{{/each}}
+							</td> 
+							<td>{{this.status}}</td>
+							{{#ifEquals this.status "Closed"}}
+							<td><a href="/openCase/{{this.caseId}}" type="submit" class="btn btn-success">Re-open case</a>&nbsp;&nbsp;<a href="/commander/assign_assets/{{this.caseId}}" type="submit" class="btn btn-default disabled">Assign assets</a></td>
+							{{else}}
+							<td><a href="/closeCase/{{this.caseId}}" type="submit" class="btn btn-danger">&nbsp;&nbsp;Close case&nbsp;&nbsp;</a>&nbsp;&nbsp;<a href="/commander/assign_assets/{{this.caseId}}" type="submit" class="btn btn-success">Assign assets</a></td>
+							{{/ifEquals}}
+							
+					</tr>
+					{{/each}}
+					</tbody>
+				</table>
+			</form>
+	</div>
+</div>
+<script>
+	$('#getCaseForm').submit(function(e){
+		e.preventDefault();
+		$.get( "/getData/"+$('#caseid').val(), function( data ) {
+			console.log(data);
+			if(data.status == "ok"){
+				location.reload();
+			}else{
+				error_msg(' fail to get case from CMO. Please check your ID.');
+			}
+		});
+	});
+</script>
+{{> footer }}

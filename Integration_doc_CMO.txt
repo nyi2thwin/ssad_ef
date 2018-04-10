@@ -1,0 +1,58 @@
+####URL to get live update####
+
+<host_name>/liveData/:caseId
+
+####Test case ID ####
+1001,1002
+<host_name>/liveData/1001
+<host_name>/liveData/1002
+
+####Sample Data####
+{
+    "location": {
+        "name": "Bukit",
+        "latitude": 12.1,
+        "longitude": 80.33
+    },
+    "incidentType": [
+        "Earthquake"
+    ],
+    "updateLog": [
+        {
+            "_id": "5acc5ad713efa05e0ddec443",
+            "description": "Update situation",
+            "updatedTime": "2018-04-10T06:33:59.503Z"
+        },
+        {
+            "_id": "5acc5ad713efa05e0ddec442",
+            "description": "More injury and casualty",
+            "updatedTime": "2018-04-10T06:33:59.503Z"
+        }
+    ],
+    "assignedAssets": [
+        {
+            "_id": "5acc5ad713efa05e0ddec445",
+            "assetType": "fireman",
+            "assignedCount": 10,
+            "dateTime": "2018-04-10T06:33:59.503Z"
+        },
+        {
+            "_id": "5acc5ad713efa05e0ddec444",
+            "assetType": "police",
+            "assignedCount": 5,
+            "dateTime": "2018-04-10T06:33:59.503Z"
+        }
+    ],
+    "_id": "5acc5ad713efa05e0ddec441",
+    "caseId": 1001,
+    "affectedArea": 300,
+    "injuryCount": "50",
+    "casualtyCount": "100",
+    "incidentDateTime": "2018-04-10T06:33:59.503Z",
+    "description": "Big and serious incident",
+    "status": "Closed",
+    "__v": 0
+}
+
+####Not found####
+{}

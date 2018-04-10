@@ -1,16 +1,6 @@
 'use strict';
 var mongoose = require('mongoose'),
-	IncidentReport = mongoose.model('IncidentReport'),
-	LiveReport = mongoose.model('LiveReport');
-
-
-exports.list_all_LiveReport = function(req, res) {
-  LiveReport.find({}, function(err, LiveReport) {
-    if (err)
-      res.send(err);
-    res.json(LiveReport);
-  });
-};
+	IncidentReport = mongoose.model('IncidentReport');
 
 exports.list_all_IncidentReport = function(req, res) {
   IncidentReport.find({}, function(err, IncidentReports) {
@@ -22,7 +12,8 @@ exports.list_all_IncidentReport = function(req, res) {
 
 exports.get_all_IncidentReport = function() {
   //console.log('here');
-  return IncidentReport.find({}) // Notice the return here
+  return IncidentReport.find({})
+  .sort({_id:-1}) // Notice the return here
   .exec()
   .then((IncidentReports) => {
     return IncidentReports;
@@ -63,6 +54,42 @@ exports.insert_live_report = function(req, res) {
   return IncidentReport.findOneAndUpdate({caseId: req.body.caseId},update_data).exec().then((result)=>{
     return result;
   });
+};
+
+exports.insert_assets = function(caseId,type,number) {
+  var update_data = {
+                    $addToSet:{assignedAssets:{ assetType:type, assignedCount:number, dateTime:Date.now() } }
+  };
+  return IncidentReport.findOneAndUpdate({caseId:caseId},update_data).exec().then((result)=>{
+    return result;
+  });
+};
+
+exports.getIncidentById = function(req,res){
+    IncidentReport.findOne({'caseId':req.params.caseId}, function(err, IncidentReport) {
+        if (err)
+            res.send(err);
+        if(IncidentReport)
+            res.json(IncidentReport);
+        else
+            res.json({});
+    });
+}
+
+exports.closeCase = function(req, res) {
+    IncidentReport.findOneAndUpdate({caseId: req.params.caseId},{"status":"Closed"}, function(err, IncidentReports) {
+        if (err)
+            console.log(err);
+        res.redirect("/commander");
+    });
+};
+
+exports.openCase = function(req, res) {
+    IncidentReport.findOneAndUpdate({caseId: req.params.caseId},{"status":"Open"}, function(err, IncidentReports) {
+        if (err)
+            console.log(err);
+        res.redirect("/commander");
+    });
 };
 
 

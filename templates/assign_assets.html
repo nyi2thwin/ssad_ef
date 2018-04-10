@@ -6,27 +6,55 @@
 	<div class="col-md-4">
 		<h2>Assign Asset Form</h2>
 		<p>{{error_message}}</p>
-		<form action="/" method="post">
+		<form action="/updateAsset" method="post">
 			<div class="form-group">
-			  	<label for="caseId">Select Asset :</label>
-			  	<input type="caseId" class="form-control" id="caseId" placeholder="select Case ID" name="caseId">
+			  	<label for="caseId">Case ID :</label>
+					<input type="text" class="form-control disabled" name="caseId" id="caseId" value="{{caseId}}"/>
 			</div>
+
 			<div class="form-group">
-			  	<label for="description">Description :</label>
-			  	<input type="description" class="form-control" id="description" placeholder="Enter description" name="description">
+			  	<label for="teamnumber">Add Asset Team</label>
+					<input type="button" class="btn btn-default btn-block" value="Add" onclick="addInput('teaminput');"/>
+			  	<!--<input type="number" class="form-control" id="teamnumber" placeholder="Enter number of teams" name="teamnumber" min="0" max="{{assets.length}}">
 			</div>
-			<div class="form-group">
-			  	<label for="description">Description :</label>
-			  	<input type="description" class="form-control" id="description" placeholder="Enter description" name="description">
+      <div>
+				   <input type="button" class="btn btn-default btn-block" value="Add" onclick="addInput('teaminput')">-->
 			</div>
-			<div class="form-group">
-			  	<label for="description">Description :</label>
-			  	<input type="description" class="form-control" id="description" placeholder="Enter description" name="description">
-			</div>
-			<div class="form-group">
-			  	<label for="description">Description :</label>
-			  	<input type="description" class="form-control" id="description" placeholder="Enter description" name="description">
-			</div>
+			<script>
+			var count = 1;
+			function addInput(divid){
+				//var choice = document.getElementById('teamnumber').value;
+				var asset_types = [];
+				var selectlabels = [];
+				//var count = 1;
+				{{#each assets}}
+				asset_types.push("{{this.assetType}}");
+				{{/each}}
+				var newDiv = document.createElement('div');
+				var selectHTML = "";
+        //selectHTML="<select>";
+				//for(j=0;j<choice;j++){
+				selectHTML = "<div class='form-group'><label for='team_type'"+ count +"'>Asset Type" + count + "</label><select class='form-control' placeholder='Select Asset Type' name='team_type'"+ count +"'>";
+				//}
+				for(i = 0; i < asset_types.length; i++) {
+        selectHTML += //"<label for='team_type'"+ i +"'>Asset Type</label>"+
+				              //"<select class='form-control' placeholder='Select Asset Type' name='team_type'"+i+"'>"+
+											"<option value='" + asset_types[i] + "'>" + asset_types[i] + "</option>"
+											//"<label for='numberofpeople'"+ i +"'>numberofpeople</label>"+
+											//"<input type='number' class='form-control' name='numberofpeople'"+i+"' placeholder='Enter number of people' min='0' max='100'>"
+				              //*"<select class='form-control' placeholder='Select Asset Type' name='team_type'"+i+"'>"+
+											//*"<option value='" + asset_types[i] + "'>" + asset_types[i] + "</option></select>";
+        }
+				selectHTML += "</select></div><div class='form-group'><label for='numberofpeople'"+ count +"'>number of people" + count + "</label>"+
+				              "<input type='number' class='form-control' name='numberofpeople'"+ count +"' placeholder='Enter number of people' min='0' max='100'></div>"
+        //selectHTML += "</select>";
+				count++;
+        newDiv.innerHTML = selectHTML;
+        document.getElementById(divid).appendChild(newDiv);
+			}
+			</script>
+			<div id="teaminput"></div>
+
 			<button type="submit" class="btn btn-default">Submit</button>
 		</form>
 	</div>

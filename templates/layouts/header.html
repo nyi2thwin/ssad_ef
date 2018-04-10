@@ -9,7 +9,18 @@
 
         <!-- Bootstrap CSS CDN -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
+        <!-- jQuery CDN -->
+        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+        <!-- Bootstrap Js CDN -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script>
+            function error_msg(msg){
+                $('#message_holder').html('<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong>check your caseID.</div>')
+            }
+            function success_msg(msg){
+                $('#message_holder').html('<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong>check your caseID.</div>')
+            }
+        </script>   
     </head>
     <body>
         <nav class="navbar navbar-default">
@@ -18,6 +29,7 @@
               <a class="navbar-brand" href="#">EF System</a>
             </div>
             <ul class="nav navbar-nav">
+                
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {{#if user}}
@@ -30,6 +42,8 @@
         </nav>
         <div class="container">
             {{{message}}}
+            <div id="message_holder">
+            </div>
         </div>
         
         

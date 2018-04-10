@@ -3,12 +3,30 @@ var router = express.Router();
 
 
 var reportController = require('../controllers/reportController');
+var assetController = require('../controllers/assetController');
 
 router.get('/commander/', function(req, res){
 	if (req.session.user.role != 'Commander')
 		res.redirect('/');
- 	var template_data = {title : 'EF Assign Asset'}
-  	res.render('assign_assets', template_data);
+ 	reportController.get_all_IncidentReport().then(function(result){
+ 		res.render('commander_home', {IncidentReports:result});
+ 	});	
+});
+
+router.get('/commander/assign_assets/:caseId', function(req, res){
+	if (req.session.user.role != 'Commander')
+		res.redirect('/');
+	
+	//res.render('assign_assets', {IncidentReports:result});
+	assetController.get_all_asset().then(function(assets){
+ 		res.render('assign_assets', {caseId:req.params.caseId,assets:assets});
+ 	});	
+});
+
+router.get('/create_new_incident/', function(req, res){
+	if (req.session.user.role != 'Commander')
+		res.redirect('/');
+ 	res.render('create_new_incident');
 });
 
 router.get('/assetOfficer/', function(req, res){
@@ -33,6 +51,27 @@ router.post('/assetOfficer/', function(req, res){
 	 	});	
  	});
  	
+});
+
+router.post('/updateAsset',function(req,res){
+	var caseId=req.body.caseId;
+	var types=(req.body.team_type.toString()).split(',');
+	var numbers=(req.body.numberofpeople.toString()).split(',');
+	var dataset = [];
+	var assets = [] ;
+	var updatednumbers =[];
+	for (i=0;i<types.length;i++){
+		dataset[i]={type:types[i],
+      number:numbers[i]
+		}
+	}
+	console.log(caseId);
+	for (i=0;i<dataset.length;i++){
+		//var index = i;
+		assetController.deduct_asset(dataset[i].type,dataset[i].number);
+		reportController.insert_assets(caseId,dataset[i].type,dataset[i].number);
+	}
+	res.redirect('/commander');
 });
 
 

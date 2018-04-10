@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var IncidentReportScheme = new Schema({
-	caseId: Number,
+	caseId: {type: Number, index: {unique: true}},
 	location:  {
 	    name: String,
 	    latitude:  Number,
@@ -11,34 +11,21 @@ var IncidentReportScheme = new Schema({
 	},
 	incidentType:[String],
 	affectedArea:Number,
-	injuryCount:Number,
-	casualtyCount:Number,
+	injuryCount:String,
+	casualtyCount:String,
 	incidentDateTime:Date,
 	description:String,
 	status:String,
 	updateLog: [{
 		description:String,
-		updatedTime: Date
+		updatedTime:Date
 	}],
-	assigned_assets:[{
-		_assetId: Schema.Types.ObjectId,
-		type: String,
-		assigned_count: Number ,
-	}]
+	assignedAssets:[{
+		assetType: String,
+        assignedCount: Number,
+        dateTime:Date
+   	}]
 });
 
 module.exports = mongoose.model('IncidentReport', IncidentReportScheme);
 
-/*
-Case ID (Int)
-Locations (ArrrayList)
-->Location Name (String)
-->Location Latitude (Double)
-->Location Longitude (Double)
-Affected Area (Int, unit square meters)
-No. of Injury (Int)
-No. of Casualty (Int)
-Incident Date Time (Datetime)
-Type of Incident (Enum)
-Description (String)
-*/

@@ -9,16 +9,12 @@
 			<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong>{{{success_message}}}</div>
 		{{else if error_message}}
 			<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong>{{{error_message}}}</div>
-		
 		{{/if}}
-		
-
-		
 
 		<form action="/assetOfficer/" method="post">
 			<div class="form-group">
 			  	<label for="caseId">Select Incident Case :</label>
-					<select class="form-control" placeholder="select Case ID" name="caseId">
+					<select class="form-control" id="selectIncident" placeholder="select Case ID" name="caseId">
 						{{#each IncidentReports}}
 						<option value="{{this.caseId}}">{{this.caseId}}.) {{this.description}}</option>
 						{{/each}}
@@ -46,4 +42,18 @@
 	<div class="col-md-4">
 	</div>
 </div>
+<script>
+	$(document).ready(function(e){
+		$('#selectIncident').change(function(e){
+			$.get( "/liveData/"+$(this).val(), function( data ) {
+				if(data){
+					$('#affectedArea').val(data.affectedArea);
+					$('#injuryCount').val(data.injuryCount);
+					$('#casualtyCount').val(data.casualtyCount);
+				}
+			});
+		});
+		$('#selectIncident').change();
+	});
+</script>
 {{> footer }}

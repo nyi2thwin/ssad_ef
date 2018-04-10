@@ -18,18 +18,17 @@ mongoose.connect('mongodb://localhost:27017/EFDatabase');
 require('./models/User');
 require('./models/Asset');
 require('./models/IncidentReport');
-require('./models/LiveReport');
 
 var User = mongoose.model('User');
 var Asset = mongoose.model('Asset');
 var IncidentReport = mongoose.model('IncidentReport');
-var LiveReport = mongoose.model('LiveReport');
 
 
 //controller
 var LoginController = require('./controllers/loginController')
 var reportController = require('./controllers/reportController')
 
+//populating dummy data
 //wipe all user
 User.remove({}, function(err,removed) {
 	//create 2 user
@@ -40,10 +39,78 @@ User.remove({}, function(err,removed) {
 //wipe all assets
 Asset.remove({}, function(err,removed) {
 	//create sample assets
-	(new Asset({type:"fireman",availableUnit:200,totalUnit:200})).save();
-	(new Asset({type:"soldier",availableUnit:200,totalUnit:200})).save();
-	(new Asset({type:"police",availableUnit:200,totalUnit:200})).save();
+	(new Asset({assetType:"fireman",availableUnit:200,totalUnit:200})).save();
+	(new Asset({assetType:"soldier",availableUnit:200,totalUnit:200})).save();
+	(new Asset({assetType:"police",availableUnit:200,totalUnit:200})).save();
 });
+
+//wipe all reports
+IncidentReport.remove({}, function(err,removed) {
+  //create sample assets
+  (new IncidentReport({
+                        caseId: 1001,
+                        location:  {
+                            name: "Bukit",
+                            latitude:  12.1,
+                            longitude: 80.33
+                        },
+                        incidentType:["Earthquake"],
+                        affectedArea:300,
+                        injuryCount:"50",
+                        casualtyCount:"100",
+                        incidentDateTime:Date.now(),
+                        description:"Big and serious incident",
+                        status:"Closed",
+                        updateLog: [{
+                          description:"Update situation",
+                          updatedTime: Date.now()
+                        },{
+                          description:"More injury and casualty",
+                          updatedTime: Date.now()
+                        }],
+                        assignedAssets:[{
+                                          assetType: "fireman",
+                                          assignedCount: 10,
+                                          dateTime:Date.now()
+                                        },{
+                                          assetType: "police",
+                                          assignedCount: 5,
+                                          dateTime:Date.now()
+                                        }]
+                      })).save();
+  (new IncidentReport({
+                        caseId: 1002,
+                        location:  {
+                            name: "Bukit",
+                            latitude:  12.1,
+                            longitude: 80.33
+                        },
+                        incidentType:["Tsunami"],
+                        affectedArea:300,
+                        injuryCount:"50",
+                        casualtyCount:"100",
+                        incidentDateTime:Date.now(),
+                        description:"Big and serious water wavess",
+                        status:"Closed",
+                        updateLog: [{
+                          description:"Update situation",
+                          updatedTime: Date.now()
+                        },{
+                          description:"More injury and casualty",
+                          updatedTime: Date.now()
+                        }],
+                        assignedAssets:[{
+                                          assetType: "fireman",
+                                          assignedCount: 10,
+                                          dateTime:Date.now()
+                                        },{
+                                          assetType: "police",
+                                          assignedCount: 5,
+                                          dateTime:Date.now()
+                                        }]
+                      })).save();
+});
+//end of dummy data
 
 
 
@@ -100,23 +167,15 @@ hbs.registerHelper('link_to2', function(title, context) {
   return "<a href='/posts" + context.url + "'>" + title + "</a>"
 });
 
+hbs.registerHelper('ifEquals', function(arg1, arg2, options) {
+    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+});
 
 hbs.registerPartials(__dirname + '/templates/layouts');
 
-// expose app and response locals in views
-hbs.localsAsTemplateData(app);
-app.locals.father = 'Alan';
 
 
 
-var ef_api = require('./controllers/myApi');
-app.use('/ef_api', ef_api);
-
-var my_cmo_api = require('./controllers/myCMOApi');
-app.use('/cmo_api', my_cmo_api);
-
-
-app.get('/userList', requiredAuthentication, LoginController.list_all_users);
 
 
 app.get('/', function(req, res){
@@ -140,11 +199,49 @@ app.get('/logout', function (req, res) {
 });
 
 
+var cmo_route = require('./views/cmo_route');
+app.use('/', cmo_route);
 
-app.post('/insert_incident_report/', reportController.insert_incident_report);
+//dummy CMO API
+app.get('/dummyCmo/:caseId',function(req,res){
+    //demo fail
+    if (req.params.caseId == 0)
+      res.json({})
+    res.json({
+              "location": {
+                  "name": "Bukit",
+                  "latitude": 12.1,
+                  "longitude": 80.33
+              },
+              "incidentType": [
+                  "Earthquake"
+              ],
+              "updateLog": [],
+              "caseId": req.params.caseId,
+              "affectedArea": "",
+              "injuryCount": "1-50",
+              "casualtyCount": "20-50",
+              "incidentDateTime": "2018-04-10T06:26:21.073Z",
+              "description": "Big and serious incident",
+              "status": "Open"
+          });
+});
+
+
+
+//all route below req authentication
+app.use('/',requiredAuthentication);
+//app.get('/userList', requiredAuthentication, LoginController.list_all_users);
 
 var my_view = require('./views/view');
-app.use('/',requiredAuthentication, my_view);
+app.use('/', my_view);
+
+var api_route = require('./views/api_route');
+app.use('/', api_route);
+
+
+
+
 
 
 
@@ -152,7 +249,7 @@ app.use(function(err, req, res, next) {
   res.status(500).send(err.stack.toString());
 });
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'))
+app.listen(8888, () => console.log('Example app listening on port 8888!'))
 
 //all functions here
 function requiredAuthentication(req, res, next) {
