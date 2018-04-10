@@ -206,7 +206,7 @@ app.use('/', cmo_route);
 app.get('/dummyCmo/:caseId',function(req,res){
     //demo fail
     if (req.params.caseId == 0)
-      res.json({})
+      return res.json({})
     res.json({
               "location": {
                   "name": "Bukit",
