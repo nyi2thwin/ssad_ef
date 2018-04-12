@@ -7,8 +7,8 @@ exports.fetch_from_CMO = function(req,res){
     var cmo_url = 'http://localhost:8888/dummyCmo/';
     fetch(cmo_url+req.params.caseId, function(error, meta, body){
       var data = JSON.parse(body);
-      if(data.hasOwnProperty('caseId')){
-        var incidentReport = new IncidentReport(data);
+      if(data.hasOwnProperty('data') && data.data.hasOwnProperty('caseId')){
+        var incidentReport = new IncidentReport(data.data);
         incidentReport.save(function(err){
           if(err)
             res.json({"status":"error","message":"save error"});

@@ -208,23 +208,25 @@ app.get('/dummyCmo/:caseId',function(req,res){
     if (req.params.caseId == 0)
       return res.json({})
     res.json({
-              "location": {
-                  "name": "Bukit",
-                  "latitude": 12.1,
-                  "longitude": 80.33
-              },
-              "incidentType": [
-                  "Earthquake"
-              ],
-              "updateLog": [],
-              "caseId": req.params.caseId,
-              "affectedArea": "",
-              "injuryCount": "1-50",
-              "casualtyCount": "20-50",
-              "incidentDateTime": "2018-04-10T06:26:21.073Z",
-              "description": "Big and serious incident",
-              "status": "Open"
-          });
+                "data":{
+                  "location": {
+                      "name": "Bukit",
+                      "latitude": 12.1,
+                      "longitude": 80.33
+                  },
+                  "incidentType": [
+                      "Earthquake"
+                  ],
+                  "updateLog": [],
+                  "caseId": req.params.caseId,
+                  "affectedArea": "",
+                  "injuryCount": "1-50",
+                  "casualtyCount": "20-50",
+                  "incidentDateTime": "2018-04-10T06:26:21.073Z",
+                  "description": "Big and serious incident",
+                  "status": "Open"
+                }
+    });
 });
 
 
