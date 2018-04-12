@@ -53,7 +53,7 @@ router.post('/assetOfficer/', function(req, res){
  	
 });
 
-router.post('/updateAsset',function(req,res){
+router.post('/updateAsset',async function(req,res){
 	var caseId=req.body.caseId;
 	var types=(req.body.team_type.toString()).split(',');
 	var numbers=(req.body.numberofpeople.toString()).split(',');
@@ -68,8 +68,8 @@ router.post('/updateAsset',function(req,res){
 	console.log(caseId);
 	for (i=0;i<dataset.length;i++){
 		//var index = i;
-		assetController.deduct_asset(dataset[i].type,dataset[i].number);
-		reportController.insert_assets(caseId,dataset[i].type,dataset[i].number);
+		await assetController.deduct_asset(dataset[i].type,dataset[i].number);
+		await reportController.insert_assets(caseId,dataset[i].type,dataset[i].number);
 	}
 	res.redirect('/commander');
 });
