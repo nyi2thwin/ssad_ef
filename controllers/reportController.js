@@ -13,7 +13,7 @@ exports.list_all_IncidentReport = function(req, res) {
 exports.get_all_IncidentReport = function() {
   //console.log('here');
   return IncidentReport.find({})
-  .sort({_id:-1}) // Notice the return here
+  .sort({caseId:1}) // Notice the return here
   .exec()
   .then((IncidentReports) => {
     return IncidentReports;
